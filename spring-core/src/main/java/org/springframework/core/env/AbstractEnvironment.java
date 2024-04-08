@@ -119,6 +119,7 @@ public abstract class AbstractEnvironment implements ConfigurableEnvironment {
 	 * @see #customizePropertySources(MutablePropertySources)
 	 */
 	public AbstractEnvironment() {
+		//子类创建时调用父类的构造方法
 		this(new MutablePropertySources());
 	}
 
@@ -442,6 +443,7 @@ public abstract class AbstractEnvironment implements ConfigurableEnvironment {
 	@Override
 	@SuppressWarnings({"rawtypes", "unchecked"})
 	public Map<String, Object> getSystemProperties() {
+		//获取系统配置信息 包括-D之类的资源
 		return (Map) System.getProperties();
 	}
 
@@ -451,6 +453,7 @@ public abstract class AbstractEnvironment implements ConfigurableEnvironment {
 		if (suppressGetenvAccess()) {
 			return Collections.emptyMap();
 		}
+		//获取环境变量
 		return (Map) System.getenv();
 	}
 

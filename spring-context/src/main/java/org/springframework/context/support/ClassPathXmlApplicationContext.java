@@ -139,6 +139,7 @@ public class ClassPathXmlApplicationContext extends AbstractXmlApplicationContex
 			throws BeansException {
 
 		super(parent);
+		//变量填充 spring/${name}.xml  -Dname=hh => spring/hh.xml
 		setConfigLocations(configLocations);
 		if (refresh) {
 			refresh();

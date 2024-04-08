@@ -41,6 +41,7 @@ include "integration-tests"
 include 'spring-example'
 
 rootProject.name = "spring"
+//这个规定了只有 声明为对应名称的的 spring-example.gradle 才可以识别到是对应的子项目
 rootProject.children.each {project ->
 	project.buildFileName = "${project.name}.gradle"
 }

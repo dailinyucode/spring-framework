@@ -4,13 +4,21 @@ import org.springframework.beans.factory.annotation.Value;
 
 public class SimpleBean {
 
-	private String name;
+	private SimpleBeanContain simpleBeanContain;
 
-	public void send() {
-		System.out.println(name + " am send method from SimpleBean!");
+	public SimpleBeanContain getSimpleBeanContain() {
+		return simpleBeanContain;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setSimpleBeanContain(SimpleBeanContain simpleBeanContain) {
+		this.simpleBeanContain = simpleBeanContain;
+	}
+
+	public MultiSimpleBean getMultiSimpleBean() {
+		return new MultiSimpleBean();
+	}
+
+	public void print(String test){
+		System.out.println(test);
 	}
 }

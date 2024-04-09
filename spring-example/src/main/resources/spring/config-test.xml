@@ -10,7 +10,24 @@
 						http://www.springframework.org/schema/context/spring-context.xsd">
 	<bean name="simpleBean1" class="com.spring.example.base.SimpleBean">
 		<!--通过 ${}配置环境的值 -->
-		<property name="name" value="${name}"/>
+		<property ref="simpleBean2" name="simpleBeanContain"/>
+		<lookup-method name="getMultiSimpleBean" bean="multiSimpleBean"/>
+		<replaced-method name="print" replacer="dlyMethodReplacer">
+			<arg-type match="String" />
+		</replaced-method>
 	</bean>
+
+	<bean name="dlyMethodReplacer" class="com.spring.example.base.DlyMethodReplacer"/>
+
+	<bean name="multiSimpleBean" class="com.spring.example.base.MultiSimpleBean">
+		<property name="name" value="你好"/>
+	</bean>
+
+	<bean class="com.spring.example.base.SimpleBean" />
+
+	<bean name="simpleBean2" class="com.spring.example.base.SimpleBeanContain">
+		<property ref="simpleBean1" name="simpleBean"/>
+	</bean>
+
 	<context:property-placeholder location="classpath*:jdbc-test.properties" file-encoding="utf-8"/>
 </beans>

@@ -319,12 +319,14 @@ public class PathMatchingResourcePatternResolver implements ResourcePatternResol
 	@Override
 	public Resource[] getResources(String locationPattern) throws IOException {
 		Assert.notNull(locationPattern, "Location pattern must not be null");
+		// 去查找 classpath*: 注意不是classpath
 		if (locationPattern.startsWith(CLASSPATH_ALL_URL_PREFIX)) {
 			// a class path resource (multiple resources for same name possible)
 			String locationPatternWithoutPrefix = locationPattern.substring(CLASSPATH_ALL_URL_PREFIX.length());
 			// Search the module path first.
 			Set<Resource> resources = findAllModulePathResources(locationPatternWithoutPrefix);
 			// Search the class path next.
+			// getPathMatcher 获取 AntPathMatcher对象
 			if (getPathMatcher().isPattern(locationPatternWithoutPrefix)) {
 				// a class path resource pattern
 				Collections.addAll(resources, findPathMatchingResources(locationPattern));
@@ -340,12 +342,14 @@ public class PathMatchingResourcePatternResolver implements ResourcePatternResol
 			// and on Tomcat only after the "*/" separator for its "war:" protocol.
 			int prefixEnd = (locationPattern.startsWith("war:") ? locationPattern.indexOf("*/") + 1 :
 					locationPattern.indexOf(':') + 1);
+			//截取到:之后的内容在进行判断  所有这里可以直接:来表示 或者直接不写
 			if (getPathMatcher().isPattern(locationPattern.substring(prefixEnd))) {
 				// a file pattern
 				return findPathMatchingResources(locationPattern);
 			}
 			else {
 				// a single resource with the given name
+				//这一步就是 通过getResourceLoader 加载对应的目录文件  在这之前必须 处理掉 ant的占位符
 				return new Resource[] {getResourceLoader().getResource(locationPattern)};
 			}
 		}
@@ -542,6 +546,7 @@ public class PathMatchingResourcePatternResolver implements ResourcePatternResol
 	}
 
 	/**
+	 * 加载 路径核心方法
 	 * Find all resources that match the given location pattern via the
 	 * Ant-style PathMatcher. Supports resources in OSGi bundles, JBoss VFS,
 	 * jar files, zip files, and file systems.
@@ -567,9 +572,11 @@ public class PathMatchingResourcePatternResolver implements ResourcePatternResol
 				}
 				rootDirResource = new UrlResource(rootDirUrl);
 			}
+			//判断是不是 vfs协议的文件
 			if (rootDirUrl.getProtocol().startsWith(ResourceUtils.URL_PROTOCOL_VFS)) {
 				result.addAll(VfsResourceMatchingDelegate.findMatchingResources(rootDirUrl, subPattern, getPathMatcher()));
 			}
+			//判断是不是 jar文件
 			else if (ResourceUtils.isJarURL(rootDirUrl) || isJarResource(rootDirResource)) {
 				result.addAll(doFindPathMatchingJarResources(rootDirResource, rootDirUrl, subPattern));
 			}
@@ -832,6 +839,7 @@ public class PathMatchingResourcePatternResolver implements ResourcePatternResol
 					.formatted(rootPath.toAbsolutePath(), subPattern));
 		}
 
+		//就在这一步 通过 Files.walk方法遍历目录下面的树加载到 Resource集合中 至此所有的文件资源都获取到了
 		try (Stream<Path> files = Files.walk(rootPath)) {
 			files.filter(isMatchingFile).sorted().map(FileSystemResource::new).forEach(result::add);
 		}

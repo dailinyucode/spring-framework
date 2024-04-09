@@ -412,15 +412,18 @@ public class BeanDefinitionParserDelegate {
 	 */
 	@Nullable
 	public BeanDefinitionHolder parseBeanDefinitionElement(Element ele, @Nullable BeanDefinition containingBean) {
+		//解析元素 获取 BeanDefinitionHolder 对象
 		String id = ele.getAttribute(ID_ATTRIBUTE);
 		String nameAttr = ele.getAttribute(NAME_ATTRIBUTE);
 
 		List<String> aliases = new ArrayList<>();
+		// id nameAttr 都支持多个 用逗号分割
 		if (StringUtils.hasLength(nameAttr)) {
 			String[] nameArr = StringUtils.tokenizeToStringArray(nameAttr, MULTI_VALUE_ATTRIBUTE_DELIMITERS);
 			aliases.addAll(Arrays.asList(nameArr));
 		}
 
+		//beanName默认为 id 不然就是取name的第一个
 		String beanName = id;
 		if (!StringUtils.hasText(beanName) && !aliases.isEmpty()) {
 			beanName = aliases.remove(0);
@@ -431,9 +434,11 @@ public class BeanDefinitionParserDelegate {
 		}
 
 		if (containingBean == null) {
+			//校验 Bean 名称是否重复 通过内部保存一个 BeanName的Set集合来记录的 先判断没有就记录 有就报错
 			checkNameUniqueness(beanName, aliases, ele);
 		}
 
+		//Bean解析就在这一步 到此 beanDefinition 构建完成 bean创建所需要的东西也准备完成
 		AbstractBeanDefinition beanDefinition = parseBeanDefinitionElement(ele, beanName, containingBean);
 		if (beanDefinition != null) {
 			if (!StringUtils.hasText(beanName)) {
@@ -447,6 +452,7 @@ public class BeanDefinitionParserDelegate {
 						// Register an alias for the plain bean class name, if still possible,
 						// if the generator returned the class name plus a suffix.
 						// This is expected for Spring 1.2/2.0 backwards compatibility.
+						// 用全类名 设置为 类名
 						String beanClassName = beanDefinition.getBeanClassName();
 						if (beanClassName != null &&
 								beanName.startsWith(beanClassName) && beanName.length() > beanClassName.length() &&
@@ -501,7 +507,7 @@ public class BeanDefinitionParserDelegate {
 			Element ele, String beanName, @Nullable BeanDefinition containingBean) {
 
 		this.parseState.push(new BeanEntry(beanName));
-
+		//查询类 和 父类
 		String className = null;
 		if (ele.hasAttribute(CLASS_ATTRIBUTE)) {
 			className = ele.getAttribute(CLASS_ATTRIBUTE).trim();
@@ -513,16 +519,23 @@ public class BeanDefinitionParserDelegate {
 
 		try {
 			AbstractBeanDefinition bd = createBeanDefinition(className, parent);
-
+			//解析属性 保存至 AbstractBeanDefinition(GenericBeanDefinition) 中
 			parseBeanDefinitionAttributes(ele, beanName, containingBean, bd);
+			//解析 description 就是这个bean的描述 并无实际大用
 			bd.setDescription(DomUtils.getChildElementValueByTagName(ele, DESCRIPTION_ELEMENT));
 
+			//解析 metaElement元素 一些附加属性
 			parseMetaElements(ele, bd);
+			//解析 lookup-method
 			parseLookupOverrideSubElements(ele, bd.getMethodOverrides());
+			//方法替换解析
 			parseReplacedMethodSubElements(ele, bd.getMethodOverrides());
 
+			//构造方法解析
 			parseConstructorArgElements(ele, bd);
+			//属性解析
 			parsePropertyElements(ele, bd);
+			//解析 qualifier解析 指定bean名称
 			parseQualifierElements(ele, bd);
 
 			bd.setResource(this.readerContext.getResource());
@@ -848,6 +861,7 @@ public class BeanDefinitionParserDelegate {
 				error("Multiple 'property' definitions for property '" + propertyName + "'", ele);
 				return;
 			}
+			//设置value
 			Object val = parsePropertyValue(ele, bd, propertyName);
 			PropertyValue pv = new PropertyValue(propertyName, val);
 			parseMetaElements(ele, pv);
@@ -916,6 +930,7 @@ public class BeanDefinitionParserDelegate {
 		Element subElement = null;
 		for (int i = 0; i < nl.getLength(); i++) {
 			Node node = nl.item(i);
+			//去掉 mate 和 description
 			if (node instanceof Element currentElement && !nodeNameEquals(node, DESCRIPTION_ELEMENT) &&
 					!nodeNameEquals(node, META_ELEMENT)) {
 				// Child element is what we're looking for.

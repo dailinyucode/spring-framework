@@ -12,19 +12,10 @@ public class Main {
 		classPathXmlApplicationContext.getEnvironment().setActiveProfiles("test");
 		classPathXmlApplicationContext.setConfigLocation("classpath:/spring/*.xml");
 		classPathXmlApplicationContext.refresh();
-		SimpleBean bean1 = classPathXmlApplicationContext.getBean("simpleBean1", SimpleBean.class);
-		bean1.send();
 
-		classPathXmlApplicationContext.getEnvironment().setActiveProfiles("dev");
-		classPathXmlApplicationContext.refresh();
-		SimpleBean bean2 = classPathXmlApplicationContext.getBean("simpleBean1", SimpleBean.class);
-		bean2.send();
-
-		classPathXmlApplicationContext.getEnvironment().setActiveProfiles("prod");
-		classPathXmlApplicationContext.refresh();
-		SimpleBean bean3 = classPathXmlApplicationContext.getBean("simpleBean1", SimpleBean.class);
-		bean3.send();
-
+		SimpleBean simpleBean = (SimpleBean) classPathXmlApplicationContext.getBean("simpleBean1");
+		System.out.println(simpleBean.getMultiSimpleBean().getName());
+		simpleBean.print("sour");
 		StandardEnvironment standardEnvironment = new StandardEnvironment();
 	}
 }

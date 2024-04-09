@@ -56,7 +56,7 @@ public abstract class BeanDefinitionReaderUtils {
 	 */
 	public static AbstractBeanDefinition createBeanDefinition(
 			@Nullable String parentName, @Nullable String className, @Nullable ClassLoader classLoader) throws ClassNotFoundException {
-
+		//创建 通用bean的定义
 		GenericBeanDefinition bd = new GenericBeanDefinition();
 		bd.setParentName(parentName);
 		if (className != null) {
@@ -119,7 +119,7 @@ public abstract class BeanDefinitionReaderUtils {
 		}
 
 		if (isInnerBean) {
-			// Inner bean: generate identity hashcode suffix.
+			// Inner bean: generate identity hashcode suffix. 用hashcode在#后面加数字
 			return generatedBeanName + GENERATED_BEAN_NAME_SEPARATOR + ObjectUtils.getIdentityHexString(definition);
 		}
 

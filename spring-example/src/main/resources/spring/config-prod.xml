@@ -10,7 +10,11 @@
 						http://www.springframework.org/schema/context/spring-context.xsd">
 	<bean name="simpleBean1" class="com.spring.example.base.SimpleBean">
 		<!--通过 ${}配置环境的值 -->
-		<property name="name" value="${name}"/>
+		<property ref="simpleBean2" name="simpleBeanContain"/>
+	</bean>
+
+	<bean name="simpleBean2" class="com.spring.example.base.SimpleBeanContain">
+		<property ref="simpleBean1" name="simpleBean"/>
 	</bean>
 	<context:property-placeholder location="classpath*:jdbc-production.properties" file-encoding="utf-8"/>
 </beans>

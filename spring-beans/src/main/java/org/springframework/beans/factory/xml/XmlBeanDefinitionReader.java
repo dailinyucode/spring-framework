@@ -508,7 +508,7 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 	 * @see BeanDefinitionDocumentReader#registerBeanDefinitions
 	 */
 	public int registerBeanDefinitions(Document doc, Resource resource) throws BeanDefinitionStoreException {
-		//创建的是 DefaultBeanDefinitionDocumentReader 对象
+		//创建的是 DefaultBeanDefinitionDocumentReader 对象 NamespaceHandlerResolver => DefaultNamespaceHandlerResolver
 		BeanDefinitionDocumentReader documentReader = createBeanDefinitionDocumentReader();
 		//getRegistry() 获取的就是一开始 创建的DefaultListableBeanFactory 是在XmlBeanDefinitionReader创建时通过构造方法放进来的
 		int countBefore = getRegistry().getBeanDefinitionCount();
@@ -530,6 +530,7 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 	 * Create the {@link XmlReaderContext} to pass over to the document reader.
 	 */
 	public XmlReaderContext createReaderContext(Resource resource) {
+		//初始化 XmlReaderContext 然后初始化了
 		return new XmlReaderContext(resource, this.problemReporter, this.eventListener,
 				this.sourceExtractor, this, getNamespaceHandlerResolver());
 	}

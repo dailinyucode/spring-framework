@@ -647,6 +647,7 @@ class ConstructorResolver {
 			@Nullable Object factoryBean, Method factoryMethod, Object[] args) {
 
 		try {
+			//getInstantiationStrategy返回的是CglibSubclassingInstantiationStrategy对象。此处instantiate实现也很简单，就是调用工厂方法的Method对象反射调用其invoke即可得到对象，SimpleInstantiationStrategy.
 			return this.beanFactory.getInstantiationStrategy().instantiate(
 					mbd, beanName, this.beanFactory, factoryBean, factoryMethod, args);
 		}

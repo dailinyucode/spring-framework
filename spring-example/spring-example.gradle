@@ -11,6 +11,8 @@ repositories {
 
 dependencies {
     api(project(":spring-context"))
+    //必须要引入 aspects 才可以用aop
+    api(project(":spring-aspects"))
     testImplementation platform('org.junit:junit-bom:5.9.1')
     testImplementation 'org.junit.jupiter:junit-jupiter'
 }

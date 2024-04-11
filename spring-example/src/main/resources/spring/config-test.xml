@@ -2,12 +2,13 @@
 <beans
 		profile="test"
 		xmlns="http://www.springframework.org/schema/beans"
-	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	   xmlns:context="http://www.springframework.org/schema/context"
-	   xsi:schemaLocation="http://www.springframework.org/schema/beans
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xmlns:context="http://www.springframework.org/schema/context"
+		xsi:schemaLocation="http://www.springframework.org/schema/beans
 						http://www.springframework.org/schema/beans/spring-beans.xsd
 						http://www.springframework.org/schema/context
-						http://www.springframework.org/schema/context/spring-context.xsd">
+						http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/aop https://www.springframework.org/schema/aop/spring-aop.xsd"
+		xmlns:aop="http://www.springframework.org/schema/aop">
 	<bean name="simpleBean1" class="com.spring.example.base.SimpleBean">
 		<!--通过 ${}配置环境的值 -->
 		<property ref="simpleBean2" name="simpleBeanContain"/>
@@ -23,11 +24,22 @@
 		<property name="name" value="你好"/>
 	</bean>
 
-	<bean class="com.spring.example.base.SimpleBean" />
+	<bean name="aopTest" class="com.spring.example.base.AopTest"/>
 
 	<bean name="simpleBean2" class="com.spring.example.base.SimpleBeanContain">
 		<property ref="simpleBean1" name="simpleBean"/>
 	</bean>
 
+	<aop:config>
+		<aop:pointcut expression="execution(* com.spring.example.base.SimpleBean.*(..)))" id="transaction"/>
+		<!-- 定义一个切面 -->
+		<aop:aspect ref="aopTest">
+			<!-- 在切面中定义一个前置通知，记录方法调用的开始时间 -->
+			<aop:before pointcut-ref="transaction" method="beforeAdvice"/>
+
+			<!-- 在切面中定义一个后置通知，记录方法调用的结束时间并打印时间差 -->
+			<aop:after pointcut-ref="transaction" method="afterAdvice"/>
+		</aop:aspect>
+	</aop:config>
 	<context:property-placeholder location="classpath*:jdbc-test.properties" file-encoding="utf-8"/>
 </beans>

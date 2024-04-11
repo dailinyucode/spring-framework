@@ -1,6 +1,9 @@
 package com.spring.example.base;
 
-public class SimpleBeanContain {
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.config.BeanPostProcessor;
+
+public class SimpleBeanContain implements InitializingBean {
 
 	private SimpleBean simpleBean;
 
@@ -11,5 +14,10 @@ public class SimpleBeanContain {
 
 	public SimpleBean getSimpleBean() {
 		return simpleBean;
+	}
+
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		System.out.println("你12312好" + simpleBean);
 	}
 }

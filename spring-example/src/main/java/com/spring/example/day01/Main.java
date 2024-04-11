@@ -14,17 +14,9 @@ import org.springframework.core.io.Resource;
 public class Main {
 	public static void main(String[] args) {
 		ClassPathXmlApplicationContext classPathXmlApplicationContext = new ClassPathXmlApplicationContext();
-		classPathXmlApplicationContext.getEnvironment().setActiveProfiles("test");
+		classPathXmlApplicationContext.getEnvironment().setActiveProfiles("dev");
 		classPathXmlApplicationContext.setConfigLocation("classpath:/spring/*.xml");
-		classPathXmlApplicationContext.addApplicationListener(event -> System.out.println(event.getSource()));
 		classPathXmlApplicationContext.refresh();
-		classPathXmlApplicationContext.publishEvent(new ApplicationEvent(new SimpleBean()) {});
-		classPathXmlApplicationContext.addBeanFactoryPostProcessor(new BeanFactoryPostProcessor() {
-			@Override
-			public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
-
-			}
-		});
 
 		SimpleBean simpleBean = (SimpleBean) classPathXmlApplicationContext.getBean("simpleBean1");
 		System.out.println(simpleBean.getMultiSimpleBean().getName());

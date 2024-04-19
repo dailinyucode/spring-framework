@@ -884,6 +884,7 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 	public MutablePropertyValues getPropertyValues() {
 		MutablePropertyValues pvs = this.propertyValues;
 		if (pvs == null) {
+			//如果为空就创建
 			pvs = new MutablePropertyValues();
 			this.propertyValues = pvs;
 		}

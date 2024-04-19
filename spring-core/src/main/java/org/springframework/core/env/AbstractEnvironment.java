@@ -66,6 +66,7 @@ public abstract class AbstractEnvironment implements ConfigurableEnvironment {
 	public static final String IGNORE_GETENV_PROPERTY_NAME = "spring.getenv.ignore";
 
 	/**
+	 * 这个就是springboot 所使用的配置 处理
 	 * Name of property to set to specify active profiles: {@value}. Value may be comma
 	 * delimited.
 	 * <p>Note that certain shell environments such as Bash disallow the use of the period
@@ -106,6 +107,7 @@ public abstract class AbstractEnvironment implements ConfigurableEnvironment {
 
 	private final Set<String> defaultProfiles = new LinkedHashSet<>(getReservedDefaultProfiles());
 
+	//保存资源
 	private final MutablePropertySources propertySources;
 
 	private final ConfigurablePropertyResolver propertyResolver;
@@ -135,6 +137,7 @@ public abstract class AbstractEnvironment implements ConfigurableEnvironment {
 	 */
 	protected AbstractEnvironment(MutablePropertySources propertySources) {
 		this.propertySources = propertySources;
+		//这里创建了属性解析器 后面才可以用
 		this.propertyResolver = createPropertyResolver(propertySources);
 		customizePropertySources(propertySources);
 	}

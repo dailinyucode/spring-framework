@@ -178,6 +178,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	protected final Log logger = LogFactory.getLog(getClass());
 
 	/** Unique id for this context, if any. */
+	// 创建上下文唯一标识
 	private String id = ObjectUtils.identityToString(this);
 
 	/** Display name. */
@@ -192,6 +193,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	private ConfigurableEnvironment environment;
 
 	/** BeanFactoryPostProcessors to apply on refresh. */
+	// 增强集合
 	private final List<BeanFactoryPostProcessor> beanFactoryPostProcessors = new ArrayList<>();
 
 	/** System time in milliseconds when this context started. */
@@ -204,6 +206,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	private final AtomicBoolean closed = new AtomicBoolean();
 
 	/** Synchronization monitor for the "refresh" and "destroy". */
+	// 一个锁
 	private final Object startupShutdownMonitor = new Object();
 
 	/** Reference to the JVM shutdown hook, if registered. */
@@ -244,6 +247,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 * Create a new AbstractApplicationContext with no parent.
 	 */
 	public AbstractApplicationContext() {
+		//创建资源模式处理器 用来处理
 		this.resourcePatternResolver = getResourcePatternResolver();
 	}
 
@@ -347,6 +351,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 * a custom {@link ConfigurableEnvironment} implementation.
 	 */
 	protected ConfigurableEnvironment createEnvironment() {
+		//在StandardEnvironment 进行了初始化
 		return new StandardEnvironment();
 	}
 
@@ -512,6 +517,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 * @see org.springframework.core.io.support.PathMatchingResourcePatternResolver
 	 */
 	protected ResourcePatternResolver getResourcePatternResolver() {
+		//路径解析器
 		return new PathMatchingResourcePatternResolver(this);
 	}
 
@@ -531,6 +537,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	@Override
 	public void setParent(@Nullable ApplicationContext parent) {
 		this.parent = parent;
+		//父子容器 spring mvc中有体现
 		if (parent != null) {
 			Environment parentEnvironment = parent.getEnvironment();
 			if (parentEnvironment instanceof ConfigurableEnvironment configurableEnvironment) {
@@ -585,14 +592,17 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 */
 	@Override
 	public void refresh() throws BeansException, IllegalStateException {
+		//直接加锁
 		synchronized (this.startupShutdownMonitor) {
 			//开启秒表 统计一下启动时间
 			StartupStep contextRefresh = this.applicationStartup.start("spring.context.refresh");
 
-			// Prepare this context for refreshing. 准备上下文进行刷新
+			// Prepare this context for refreshing.
+			// 准备上下文进行刷新
 			prepareRefresh();
 
-			// Tell the subclass to refresh the internal bean factory. 创建BeanFactory工厂对象 加载xml资源到bean工厂内部
+			// Tell the subclass to refresh the internal bean factory.
+			// 创建BeanFactory工厂对象 加载xml资源到bean工厂内部
 			ConfigurableListableBeanFactory beanFactory = obtainFreshBeanFactory();
 
 			// Prepare the bean factory for use in this context.
@@ -610,7 +620,8 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 				// 调用 beanFactoryPostProcessors
 				invokeBeanFactoryPostProcessors(beanFactory);
 
-				// Register bean processors that intercept bean creation. 注册bean的前置处理器
+				// Register bean processors that intercept bean creation.
+				// 注册bean的前置处理器
 				registerBeanPostProcessors(beanFactory);
 				beanPostProcess.end();
 
@@ -668,6 +679,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 */
 	protected void prepareRefresh() {
 		// Switch to active.
+		// 设置启动时间 两个标志位
 		this.startupDate = System.currentTimeMillis();
 		this.closed.set(false);
 		this.active.set(true);
@@ -682,7 +694,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		}
 
 		// Initialize any placeholder property sources in the context environment.
-		// 空实现 扩展点
+		// 空实现 扩展点 留给子类进行对应的扩展工作
 		initPropertySources();
 
 		// Validate that all properties marked as required are resolvable:
@@ -691,6 +703,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		getEnvironment().validateRequiredProperties();
 
 		// Store pre-refresh ApplicationListeners...
+		// 默认都是没有的 进行初始化
 		if (this.earlyApplicationListeners == null) {
 			this.earlyApplicationListeners = new LinkedHashSet<>(this.applicationListeners);
 		}
@@ -721,7 +734,9 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 * @see #getBeanFactory()
 	 */
 	protected ConfigurableListableBeanFactory obtainFreshBeanFactory() {
+		// 初始化 BeanFactory 并进行xml文件的读取 并将得到的BeanFactory记录到当前实体属性中
 		refreshBeanFactory();
+		// 返回当前实例的BeanFactory
 		return getBeanFactory();
 	}
 
@@ -866,6 +881,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 			}
 		}
 		else {
+			//创建到容器中
 			this.applicationEventMulticaster = new SimpleApplicationEventMulticaster(beanFactory);
 			//注册这个到容器种
 			beanFactory.registerSingleton(APPLICATION_EVENT_MULTICASTER_BEAN_NAME, this.applicationEventMulticaster);

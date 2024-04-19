@@ -58,6 +58,7 @@ import org.springframework.core.io.ResourceLoader;
 public interface ResourcePatternResolver extends ResourceLoader {
 
 	/**
+	 * 用来解析 classpath*:相关的文件
 	 * Pseudo URL prefix for all matching resources from the class path: {@code "classpath*:"}.
 	 * <p>This differs from ResourceLoader's {@code "classpath:"} URL prefix in
 	 * that it retrieves all matching resources for a given path &mdash; for

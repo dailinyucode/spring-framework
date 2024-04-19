@@ -1435,6 +1435,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		}
 
 		if (pvs != null) {
+			//设置属性 值
 			applyPropertyValues(beanName, mbd, bw, pvs);
 		}
 	}

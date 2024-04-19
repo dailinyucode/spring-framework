@@ -459,6 +459,7 @@ public abstract class AbstractNestablePropertyAccessor extends AbstractPropertyA
 				}
 				pv.getOriginalPropertyValue().conversionNecessary = (valueToApply != originalValue);
 			}
+			//设置值
 			ph.setValue(valueToApply);
 		}
 		catch (TypeMismatchException ex) {

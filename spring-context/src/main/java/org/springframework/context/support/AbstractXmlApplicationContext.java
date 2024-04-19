@@ -46,6 +46,7 @@ import org.springframework.lang.Nullable;
  */
 public abstract class AbstractXmlApplicationContext extends AbstractRefreshableConfigApplicationContext {
 
+	//是否使用xml校验
 	private boolean validating = true;
 
 

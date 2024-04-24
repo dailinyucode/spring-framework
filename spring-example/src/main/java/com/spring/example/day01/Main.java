@@ -1,6 +1,7 @@
 package com.spring.example.day01;
 
 import com.spring.example.base.SimpleBean;
+import com.spring.example.base.SimpleBeanContain;
 import com.spring.example.base2.HeBuildObj;
 import com.spring.example.context.MyClassPathXmlApplicationContext;
 import org.springframework.beans.BeansException;
@@ -21,7 +22,8 @@ public class Main {
 		classPathXmlApplicationContext.setConfigLocation("classpath:/spring/*.xml");
 		classPathXmlApplicationContext.refresh();
 
-		HeBuildObj heBuildObj = classPathXmlApplicationContext.getBean(HeBuildObj.class);
-		heBuildObj.build();
+		SimpleBeanContain bean = classPathXmlApplicationContext.getBean(SimpleBeanContain.class);
+		System.out.println(bean);
+//		heBuildObj.build();
 	}
 }

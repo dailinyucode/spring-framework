@@ -18,6 +18,8 @@
 		</replaced-method>
 	</bean>
 
+	<bean name="testBeanPostProcess" class="com.spring.example.base.TestBeanPostProcess" />
+
 	<bean name="dlyMethodReplacer" class="com.spring.example.base.DlyMethodReplacer"/>
 
 	<bean name="multiSimpleBean" class="com.spring.example.base.MultiSimpleBean">
@@ -30,8 +32,8 @@
 		<property ref="simpleBean1" name="simpleBean"/>
 	</bean>
 
-	<aop:config>
-		<aop:pointcut expression="execution(* com.spring.example.base.SimpleBean.*(..)))" id="transaction"/>
+	<aop:config proxy-target-class="true">
+		<aop:pointcut expression="execution(* com.spring.example.base.SimpleBeanContain.*(..)))" id="transaction"/>
 		<!-- 定义一个切面 -->
 		<aop:aspect ref="aopTest">
 			<!-- 在切面中定义一个前置通知，记录方法调用的开始时间 -->

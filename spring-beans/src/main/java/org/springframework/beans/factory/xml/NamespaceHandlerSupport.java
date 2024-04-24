@@ -136,6 +136,7 @@ public abstract class NamespaceHandlerSupport implements NamespaceHandler {
 	 * name.
 	 */
 	protected final void registerBeanDefinitionParser(String elementName, BeanDefinitionParser parser) {
+		//初始化时 会添加各种BeanDefinitionParser解析器
 		this.parsers.put(elementName, parser);
 	}
 

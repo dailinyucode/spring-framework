@@ -3,7 +3,7 @@ package com.spring.example.base;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 
-public class SimpleBeanContain implements InitializingBean {
+public class SimpleBeanContain implements InitializingBean, SimpleBeanInterface {
 
 	private SimpleBean simpleBean;
 

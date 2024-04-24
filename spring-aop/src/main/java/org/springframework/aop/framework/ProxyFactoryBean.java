@@ -250,6 +250,7 @@ public class ProxyFactoryBean extends ProxyCreatorSupport
 	public Object getObject() throws BeansException {
 		initializeAdvisorChain();
 		if (isSingleton()) {
+			// aop
 			return getSingletonInstance();
 		}
 		else {

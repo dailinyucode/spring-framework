@@ -2,7 +2,7 @@ package com.spring.example.base;
 
 import org.springframework.beans.factory.annotation.Value;
 
-public class SimpleBean {
+public class SimpleBean implements SimpleBeanInterface {
 
 	private SimpleBeanContain simpleBeanContain;
 
